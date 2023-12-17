@@ -1,6 +1,20 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import { initializeApp } from "firebase/app"
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCps0rS0VKeOWXs0deK8RII_SCbLsyB-YE",
+  authDomain: "family-dashboard-e-and-h.firebaseapp.com",
+  projectId: "family-dashboard-e-and-h",
+  storageBucket: "family-dashboard-e-and-h.appspot.com",
+  messagingSenderId: "694123688054",
+  appId: "1:694123688054:web:5dae40e02391ee234baf57"
+};
+
+const app = initializeApp(firebaseConfig);
+console.log(app);
+
 </script>
 
 <template>
