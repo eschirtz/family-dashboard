@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: cd webapp && yarn && yarn build
+      - run: cd webapp && npm ci && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ERIC_AND_HANNAH_DASHBOARD }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FAMILY_DASHBOARD_E_AND_H }}'
           channelId: live
-          projectId: eric-and-hannah-dashboard
+          projectId: family-dashboard-e-and-h
