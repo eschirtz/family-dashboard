@@ -11,24 +11,27 @@ import {onCall} from "firebase-functions/v2/https";
 import * as logger from "firebase-functions/logger";
 import {LinearClient, WorkflowState} from "@linear/sdk";
 
-// Api key authentication
-const linear = new LinearClient({
-  apiKey: "lin_api_ROUuLW04FHqU3RTFP87MA5FPyaE8MZvCcyusHR0E",
-});
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
 
 export const getTasks = onCall(async (request) => {
-  logger.info("getTasks", request.data);
+  logger.info("getTasks");
+  // Api key authentication
+  const linear = new LinearClient({
+    apiKey: "lin_api_cLEemAQ5f6K03GCdhiFWR5LNZGFATlwskB0h8Bfa",
+  });
+  logger.info("linear initialization complete");
   // const text = request.data.text;
   // Authentication / user information is automatically added to the request.
   // const uid = request.auth?.uid;
 
   // get linear issues
-  logger.info("linear initialization");
   const me = await linear.viewer;
+  logger.info("linear viewer", me);
   const myIssues = await me.assignedIssues();
+  logger.info("myIssues", myIssues);
+
 
   const tasks: {title: string, state?: WorkflowState }[] = [];
   if (myIssues.nodes.length) {

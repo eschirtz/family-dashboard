@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
 import { initializeApp } from "firebase/app"
+import { getFunctions, httpsCallable } from 'firebase/functions';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCps0rS0VKeOWXs0deK8RII_SCbLsyB-YE",
@@ -13,7 +14,17 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-console.log(app);
+const functions = getFunctions(app);
+
+const getTasks = httpsCallable(functions, 'getTasks');
+getTasks()
+  .then((result) => {
+    // Read result of the Cloud Function.
+    /** @type {any} */
+    const payload = result.data;
+    console.log(payload);
+    
+  });
 
 </script>
 
