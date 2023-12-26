@@ -1,115 +1,40 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import {RouterView } from 'vue-router'
 import { initializeApp } from "firebase/app"
-import { getFunctions, httpsCallable } from 'firebase/functions';
+import { getFirestore, collection, onSnapshot, where, query } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCps0rS0VKeOWXs0deK8RII_SCbLsyB-YE",
-  authDomain: "family-dashboard-e-and-h.firebaseapp.com",
-  projectId: "family-dashboard-e-and-h",
-  storageBucket: "family-dashboard-e-and-h.appspot.com",
-  messagingSenderId: "694123688054",
-  appId: "1:694123688054:web:5dae40e02391ee234baf57"
+  apiKey: "AIzaSyAKuzb1iWc4F9fm0j7ZFxv8KYaPAt-SpVQ",
+  authDomain: "family-dashboard-78ade.firebaseapp.com",
+  projectId: "family-dashboard-78ade",
+  storageBucket: "family-dashboard-78ade.appspot.com",
+  messagingSenderId: "203738565993",
+  appId: "1:203738565993:web:08b8373a39fa08758581f8",
+  measurementId: "G-J11YSVF4PM"
 };
 
 const app = initializeApp(firebaseConfig);
-const functions = getFunctions(app);
 
-interface Task {
-  title: string,
-  priority: number,
-  state?: string,
-}
+const db = getFirestore(app);
 
-const tasks = ref<{ [id: string]: Task }>({})
-const getTasks = httpsCallable(functions, 'getTasks');
-getTasks().then((result) => {
-  tasks.value = result.data as {[id: string]: Task};        
+const issues = ref<any[]>([]);
+
+const issuesRef = collection(db, "issues");
+const activeIssues = query(issuesRef, where("state.type", "!=", "completed"));
+
+const unsub = onSnapshot(activeIssues, (snap) => {
+  issues.value = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 });
 
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />      
-      <div v-for="(task, id) in tasks" :key="id">
-        {{ task }}
-      </div>
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
+  <ul>
+    <li v-for="issue of issues" :key="issue.id">{{ issue.title }}</li>
+  </ul>
   <RouterView />
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
 </style>
