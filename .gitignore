@@ -1,3 +1,5 @@
+webapp/dist
+
 # Logs
 logs
 *.log
