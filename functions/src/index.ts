@@ -15,6 +15,8 @@ export const linearIssues = onRequest(async (req, res) => {
   logger.info("id", id);
 
   const docRef = db.collection("issues").doc(id);
+
+  // TODO: Convert timestamps to Firestore Timestamps so they can be queried
   await docRef.set(issue, {merge: true});
   res.send(200);
 });
