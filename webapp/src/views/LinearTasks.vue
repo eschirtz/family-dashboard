@@ -3,7 +3,7 @@
   import { getFirestore, collection, onSnapshot } from "firebase/firestore";
   
   const db = getFirestore();
-  
+
   /**
    * A semi-complete interface for 
    * the Linear Issue object. 
@@ -12,11 +12,12 @@
    */
   interface Issue {
     id: string;
-    title: string;
+    title: string;    
     state: {
       name:  "Backlog" | "Todo" | "In Progress" | "Done";
       type: 'completed' | 'started' | 'unstarted';
     };
+    priority?: number;
     parentId?: string;
   }
 
@@ -26,6 +27,8 @@
   const unsubIssues = onSnapshot(issuesRef, (snap) => {
     const _issues: Issue[] = [];
     const docs = snap.docs;
+
+    // Filter
     for(let i=0; i < docs.length; i++) {
       const doc = docs[i];
       const issue = { id: doc.id, ...doc.data() } as Issue;
@@ -35,7 +38,28 @@
       }
       _issues.push(issue);
     }
-    issues.value = _issues;    
+
+    _issues.sort((a, b) => {
+      if (a.state.type === "started" && b.state.type !== "started") {
+        return 1;
+      } 
+      if (a.state.type === "unstarted" && b.state.type !== "unstarted") {
+        return -1;
+      }
+      if (a.state.type === "completed" && b.state.type !== "completed") {
+        return 1;
+      }
+
+      const NO_PRIORITY = 5;
+
+      const aPriority = a.priority || NO_PRIORITY;
+      const bPriority = b.priority || NO_PRIORITY;
+
+      return aPriority - bPriority;
+    })
+
+    issues.value = _issues;
+    
   });
 </script>
 
