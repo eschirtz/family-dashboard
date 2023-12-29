@@ -17,8 +17,14 @@ initializeApp(firebaseConfig);
 </script>
 
 <template>
-  <RouterView />
+  <main :class="{ ['pi-400x300']: true }">
+    <RouterView />
+  </main>
 </template>
 
 <style scoped>
+.pi-400x300 {
+  width: 400px;
+  height: 300px;
+}
 </style>
