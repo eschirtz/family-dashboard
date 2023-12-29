@@ -1,5 +1,7 @@
 body {
   margin: 0;
+  background-image: url("/plant-texture.jpeg");
+  background-size: 256px;
 }
 
 #app {
