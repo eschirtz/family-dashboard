@@ -33,7 +33,7 @@ main {
     background: black;
     color: white;
   }  
-} 
+}
 
 .pi-400x300 {
   width: 400px;

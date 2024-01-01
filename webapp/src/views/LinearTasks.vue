@@ -64,13 +64,46 @@
 </script>
 
 <template>
-  <ul>
+  <ul class="pa-2 pl-2">
     <li v-for="issue of issues" :key="issue.id" :class="{ 'completed': issue.state.type === 'completed' }">{{ issue.title }}</li>
   </ul>
+  <div class="ruler"></div>
 </template>
 
 <style scoped>
-.completed {
+.completed {  
+  color: var(--text-secondary);
   text-decoration: line-through;
+  font-style: italic;
+}
+
+.completed::before {
+  content: '';
+  padding-right: 16px;
+}
+
+.ruler {
+  border-bottom: 1px solid var(--text-secondary);
+  margin: 0 0 8px 0;
+  width: 3.66in;
+}
+
+ul {
+    list-style-type: none; /* Removes default bullets */
+    margin: 0;
+    font-size: 12px;
+}
+
+ul li::before {
+    font-size: 10px;
+    content: '▢'; /* Checkbox character */
+    text-decoration: none !important;;
+    padding-right: 6px;
+    /* Additional styling as needed */
+}
+
+/* Optional: Style for the list items */
+ul li {
+    /* Add your styles here */
 }
 </style>
