@@ -17,26 +17,10 @@ initializeApp(firebaseConfig);
 </script>
 
 <template>
-  <main :class="{ ['pi-400x300']: true }">
+  <main>
     <RouterView />
   </main>
 </template>
 
 <style scoped>
-
-main {
-  background: white;
-}
-
-@media (prefers-color-scheme: dark) {
-  main {
-    background: black;
-    color: white;
-  }  
-}
-
-.pi-400x300 {
-  width: 400px;
-  height: 300px;
-}
 </style>

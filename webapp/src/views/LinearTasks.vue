@@ -1,3 +1,14 @@
+<template>
+  <div class="container">
+  <ul class="px-2 py-2">
+    <li v-for="issue of issues" :key="issue.id" :class="{ 'completed': issue.isCompleted }" class="d-flex align-center mb-1">
+      <div>{{ issue.isCompleted ? '✓' : '☐' }}</div>
+      <span class="truncate">{{ issue.title }}</span>
+    </li>
+  </ul>
+  </div>
+</template>
+
 <script setup lang="ts">
   import { ref } from 'vue';
   import { getFirestore, collection, onSnapshot } from "firebase/firestore";
@@ -12,10 +23,11 @@
    */
   interface Issue {
     id: string;
+    isCompleted: boolean;
     title: string;    
     state: {
-      name:  "Backlog" | "Todo" | "In Progress" | "Done";
-      type: 'completed' | 'started' | 'unstarted';
+      name:  "Backlog" | "Todo" | "In Progress" | "Done" | "Canceled";
+      type: 'completed' | 'started' | 'unstarted' | 'canceled';
     };
     priority?: number;
     parentId?: string;
@@ -31,13 +43,17 @@
     // Filter
     for(let i=0; i < docs.length; i++) {
       const doc = docs[i];
-      const issue = { id: doc.id, ...doc.data() } as Issue;
+      const issue = { 
+        id: doc.id, 
+        isCompleted: doc.data().state.type === "completed",
+        ...doc.data() 
+      } as Issue;
       
-      if (issue.parentId) {
+      if (issue.parentId || issue.state.type === "canceled") {
         continue;
       }
       _issues.push(issue);
-    }
+    }    
 
     _issues.sort((a, b) => {
       if (a.state.type === "started" && b.state.type !== "started") {
@@ -63,29 +79,24 @@
   });
 </script>
 
-<template>
-  <ul class="pa-2 pl-2">
-    <li v-for="issue of issues" :key="issue.id" :class="{ 'completed': issue.state.type === 'completed' }">{{ issue.title }}</li>
-  </ul>
-  <div class="ruler"></div>
-</template>
-
 <style scoped>
-.completed {  
-  color: var(--text-secondary);
+li {
+  height: 18px;
+}
+
+li div {
+  font-size: 16px;  
+  padding-right: 6px;
+  width: 12px;
+  text-align: center;
+}
+
+.completed span {
   text-decoration: line-through;
-  font-style: italic;
 }
 
-.completed::before {
-  content: '';
-  padding-right: 16px;
-}
-
-.ruler {
-  border-bottom: 1px solid var(--text-secondary);
-  margin: 0 0 8px 0;
-  width: 3.66in;
+.completed div {
+  font-size: 12px;
 }
 
 ul {
@@ -94,16 +105,21 @@ ul {
     font-size: 12px;
 }
 
-ul li::before {
-    font-size: 10px;
-    content: '▢'; /* Checkbox character */
-    text-decoration: none !important;;
-    padding-right: 6px;
-    /* Additional styling as needed */
+.truncate {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Optional: Style for the list items */
-ul li {
-    /* Add your styles here */
+.container {
+  background: white;
+}
+
+@media (prefers-color-scheme: dark) {
+  .container {
+    background: black;
+    color: white;
+  }  
 }
 </style>

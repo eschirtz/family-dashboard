@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LinearTasks from '../views/LinearTasks.vue'
+import MockupView from '@/views/MockupView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,7 +7,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: LinearTasks
+      component: MockupView
     },
   ]
 })
